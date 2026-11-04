@@ -8,6 +8,7 @@
 <meta property="og:title" content="Flippjakten Väst">
 <meta property="og:description" content="Tio specialistagenter hittar begagnade flippfynd för 2 000–20 000 kr runt Göteborg och Lilla Edet, prisjämförda mot Blocket och Tradera. Nya fynd varje timme.">
 <meta property="og:type" content="website">
+<meta name="fj-live" content="https://raw.githubusercontent.com/jonatanaman89-alt/flippjakten/main/deals.json">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F1F3EE" media="(prefers-color-scheme: light)">
@@ -1465,9 +1466,13 @@ let liveTimer = null;
 async function pullSnapshot() {
   if (feed.db || location.protocol !== "https:") return;
   try {
-    const res = await fetch("deals.json?t=" + Date.now(), { cache: "no-store" });
-    if (!res.ok) return;
-    const v = await res.json();
+    // Läs helst direkt ur repot (uppdateras inom några minuter); GitHub Pages egen kopia kan ligga efter i bygg-kön
+    const live = document.querySelector('meta[name="fj-live"]')?.content;
+    let v = null;
+    for (const url of [live, "deals.json"].filter(Boolean)) {
+      try { const res = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" }); if (res.ok) { v = await res.json(); break; } } catch {}
+    }
+    if (!v) return;
     const updatedAt = v?.updatedAt ?? null;
     if (!updatedAt || (SNAP.updatedAt && Date.parse(updatedAt) <= Date.parse(SNAP.updatedAt))) return;
     SNAP = { updatedAt, deals: Array.isArray(v?.deals) ? v.deals.filter(d => d && typeof d.id === "string") : [] };
