@@ -1,4 +1,4 @@
-// Flippjakten Väst – service worker (genererad av agent/build-public.mjs 2026-11-05T21:16:12.231Z)
+// Flippjakten Väst – service worker (genererad av agent/build-public.mjs 2026-11-05T21:26:36.810Z)
 // Sidan hämtas alltid från nätet först; lyckas det sparas en kopia. Utan nät visas den senast sparade kopian.
 // Ikoner och manifest sparas också, men inget från andra sajter (typsnitt m.m.) cachas.
 // Alla sökvägar räknas från mappen där sw.js ligger, så sajten fungerar både på en egen domän och i en undermapp
